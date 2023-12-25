@@ -1,0 +1,27 @@
+# Podman Quadlet file
+[Unit]
+Description=The Pihole container
+# Binding to specific IP needs network-online.target
+After=network-online.target
+
+[Container]
+Image=ghcr.io/martin1/pihole-unbound:latest
+ContainerName=pihole
+Volume={{ container.datadir }}/pihole/etc-pihole:/etc/pihole:Z
+Volume={{ container.datadir }}/pihole/etc-dnsmasq.d:/etc/dnsmasq.d:Z
+
+AutoUpdate=registry
+# host:container
+PublishPort=8081:80/tcp
+
+# Needs specific IP because podman's aardvark DNS is already using port 53
+PublishPort={{ system.ip_address }}:53:53/tcp
+PublishPort={{ system.ip_address }}:53:53/udp
+
+Environment=TZ=Europe/Tallinn
+# Remove admin page password
+Environment=WEBPASSWORD=""
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target
