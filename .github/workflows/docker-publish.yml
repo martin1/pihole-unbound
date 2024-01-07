@@ -9,7 +9,8 @@ on:
   push:
     #branches: [ "main" ]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: 
+      - 'v*.*.*'
   #pull_request:
     #branches: [ "main" ]
 
@@ -63,8 +64,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: 
+          tags: |
             type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=ref,event=tag
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
