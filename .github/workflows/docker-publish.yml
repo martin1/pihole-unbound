@@ -63,7 +63,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: 
+          tags: |
             type=semver,pattern={{version}}
 
       # Build and push Docker image with Buildx (don't push on PR)
